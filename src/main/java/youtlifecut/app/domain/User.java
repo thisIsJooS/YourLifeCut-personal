@@ -17,6 +17,7 @@ import java.util.List;
 public class User extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(length = 8, unique = true, nullable = false)
@@ -40,6 +41,9 @@ public class User extends BaseTimeEntity{
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Review_Like> review_likes = new ArrayList<>();
 
+
+    @ManyToMany(mappedBy = "users")
+    private List<Keyword> keywords = new ArrayList<>();
 
 
     @Builder

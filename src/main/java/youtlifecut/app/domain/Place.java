@@ -1,5 +1,6 @@
 package youtlifecut.app.domain;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +10,11 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Place {
+@Data
+public class Place{
     @Id
     @GeneratedValue
-    @Column(name = "order_id")
+    @Column(name = "place_id")
     private Long id;
     private String name;
     private String address;
@@ -28,5 +30,27 @@ public class Place {
 
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "place")
+    private List<Place_Like> placeLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "place")
+    private List<Review> placeReviews = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "places")
+    private List<Keyword> keywords = new ArrayList<>();
+
+    //==생성메소드==//
+    public void setPlaceImage(Image image){
+        this.images.add(image);
+        image.setPlace(this);
+    }
+
+    public void setCuration(Curation curation){
+        this.curation = curation;
+        curation.getPlaces().add(this);
+    }
+
+
 
 }

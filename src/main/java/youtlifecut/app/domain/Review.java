@@ -1,13 +1,20 @@
 package youtlifecut.app.domain;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Review {
+@Data
+@DynamicInsert
+public class Review extends BaseTimeEntity{
     @Id
     @GeneratedValue
     @Column(name = "review_id")
@@ -24,5 +31,22 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
+
+    @ColumnDefault("0")
+    private Integer likeCnt;
+
+    @OneToMany(mappedBy = "review")
+    private List<Review_Like> reviewLikes = new ArrayList<>();
+
+
+    @ManyToMany(mappedBy = "reviews")
+    private List<Keyword> keywords = new ArrayList<>();
+
+    //==생성메소드==//
+    public void postReview(Place place){
+        this.place = place;
+        place.getPlaceReviews().add(this);
+    }
+
 
 }

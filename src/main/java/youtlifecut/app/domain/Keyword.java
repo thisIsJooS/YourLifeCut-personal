@@ -28,12 +28,12 @@ public class Keyword {
     @JoinTable(name = "User_Keyword",
             joinColumns = @JoinColumn(name = "keyword_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> user = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "Place_Keyword",
             joinColumns = @JoinColumn(name = "keyword_id"),
             inverseJoinColumns = @JoinColumn(name = "place_id"))
-    private List<Place> place = new ArrayList<>();
+    private List<Place> places = new ArrayList<>();
 
 }

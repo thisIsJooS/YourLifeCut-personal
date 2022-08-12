@@ -16,7 +16,7 @@ public class Image {
 
     private String image_url;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "place_id")
     private Place place;
 }
