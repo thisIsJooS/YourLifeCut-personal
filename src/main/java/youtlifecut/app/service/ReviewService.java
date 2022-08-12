@@ -9,6 +9,7 @@ import youtlifecut.app.domain.Place;
 import youtlifecut.app.domain.Review;
 import youtlifecut.app.domain.Review_Like;
 import youtlifecut.app.domain.User;
+import youtlifecut.app.dto.ReviewDeleteDto;
 import youtlifecut.app.dto.ReviewDetailDto;
 import youtlifecut.app.dto.ReviewPostDto;
 import youtlifecut.app.repository.PlaceRepository;
@@ -87,6 +88,10 @@ public class ReviewService {
     /**
      * 리뷰 삭제
      */
+    public ResponseEntity deleteReview(ReviewDeleteDto reviewDeleteDto){
+        reviewRepository.deleteById(reviewDeleteDto.getReviewId());
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
 
 }
