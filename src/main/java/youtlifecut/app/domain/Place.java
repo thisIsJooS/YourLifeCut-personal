@@ -20,6 +20,7 @@ public class Place{
     private String address;
     private String category;
     private String phone_num;
+    private Float rating;
 
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
