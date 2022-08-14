@@ -10,6 +10,8 @@ import youtlifecut.app.dto.review.ReviewLocationAddDto;
 import youtlifecut.app.dto.review.ReviewPostDto;
 import youtlifecut.app.service.ReviewService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/review")
 @RequiredArgsConstructor

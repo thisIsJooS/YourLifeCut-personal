@@ -3,6 +3,7 @@ package youtlifecut.app.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import youtlifecut.app.domain.Place;
@@ -21,6 +22,7 @@ import youtlifecut.app.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 
 @Service
 @Transactional
@@ -103,16 +105,14 @@ public class ReviewService {
      */
     public PlaceSearchDto getReviewByPlaceName(String placeName){
         Place place = placeRepository.findByName(placeName)
-                .orElseThrow(() -> new IllegalStateException("그런 장소 없음"));
+                .orElse(null);
 
-        List<Review> reviews = reviewRepository.findByPlace(place)
-                .orElseThrow(() -> new IllegalStateException("그런 리뷰 없음"));
-
-
+        if(place == null){
+            return PlaceSearchDto.builder().placename(null).build();
+        }
 
         PlaceSearchDto placeSearchDto = PlaceSearchDto.builder()
-                .placename(placeName)
-                .reviews(reviews)
+                .placename(place.getName())
                 .build();
 
         return placeSearchDto;

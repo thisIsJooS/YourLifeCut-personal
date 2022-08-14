@@ -9,11 +9,9 @@ import java.util.List;
 @Data
 public class PlaceSearchDto {
     private String placename;
-    private List<Review> reviews;
 
     @Builder
-    public PlaceSearchDto(String placename, List<Review> reviews){
+    public PlaceSearchDto(String placename){
         this.placename = placename;
-        this.reviews = reviews;
     }
 }
