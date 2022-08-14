@@ -1,4 +1,4 @@
-package youtlifecut.app.dto;
+package youtlifecut.app.dto.review;
 
 import lombok.Builder;
 import lombok.Data;

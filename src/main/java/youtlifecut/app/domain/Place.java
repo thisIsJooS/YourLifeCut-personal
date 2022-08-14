@@ -31,11 +31,9 @@ public class Place{
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "place")
+    @OneToMany(mappedBy = "place" , fetch = FetchType.LAZY)
     private List<Place_Like> placeLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "place")
-    private List<Review> placeReviews = new ArrayList<>();
 
     @ManyToMany(mappedBy = "places")
     private List<Keyword> keywords = new ArrayList<>();

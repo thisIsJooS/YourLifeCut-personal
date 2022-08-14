@@ -3,10 +3,11 @@ package youtlifecut.app.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import youtlifecut.app.domain.Review;
-import youtlifecut.app.dto.ReviewDeleteDto;
-import youtlifecut.app.dto.ReviewDetailDto;
-import youtlifecut.app.dto.ReviewPostDto;
+import youtlifecut.app.dto.place.PlaceSearchDto;
+import youtlifecut.app.dto.review.ReviewDeleteDto;
+import youtlifecut.app.dto.review.ReviewDetailDto;
+import youtlifecut.app.dto.review.ReviewLocationAddDto;
+import youtlifecut.app.dto.review.ReviewPostDto;
 import youtlifecut.app.service.ReviewService;
 
 @RestController
@@ -26,14 +27,25 @@ public class ReviewController {
         return reviewService.postReview(reviewPostDto);
     }
 
-    @GetMapping("/like")
-    public ResponseEntity reviewLike(@RequestParam(name = "userId") Long user_id, @RequestParam(name = "reviewId") Long review_id){
-        return reviewService.reviewLike(user_id, review_id);
-    }
 
     @DeleteMapping("")
     public ResponseEntity deleteReview(@RequestBody ReviewDeleteDto reviewDeleteDto){
         return reviewService.deleteReview(reviewDeleteDto);
+    }
+
+    @GetMapping("/search")
+    public PlaceSearchDto getReviewByPlaceName(@RequestParam(name="placename") String placeName){
+        return reviewService.getReviewByPlaceName(placeName);
+    }
+
+    @PostMapping("/location")
+    public ResponseEntity addPlace(@RequestBody ReviewLocationAddDto reviewLocationAddDto){
+        return reviewService.addPlace(reviewLocationAddDto);
+    }
+
+    @GetMapping("/like")
+    public ResponseEntity reviewLike(@RequestParam(name = "userId") Long user_id, @RequestParam(name = "reviewId") Long review_id){
+        return reviewService.reviewLike(user_id, review_id);
     }
 
 

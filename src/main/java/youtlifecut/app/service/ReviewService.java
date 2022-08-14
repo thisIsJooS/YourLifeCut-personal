@@ -9,13 +9,18 @@ import youtlifecut.app.domain.Place;
 import youtlifecut.app.domain.Review;
 import youtlifecut.app.domain.Review_Like;
 import youtlifecut.app.domain.User;
-import youtlifecut.app.dto.ReviewDeleteDto;
-import youtlifecut.app.dto.ReviewDetailDto;
-import youtlifecut.app.dto.ReviewPostDto;
+import youtlifecut.app.dto.place.PlaceSearchDto;
+import youtlifecut.app.dto.review.ReviewDeleteDto;
+import youtlifecut.app.dto.review.ReviewDetailDto;
+import youtlifecut.app.dto.review.ReviewLocationAddDto;
+import youtlifecut.app.dto.review.ReviewPostDto;
 import youtlifecut.app.repository.PlaceRepository;
 import youtlifecut.app.repository.ReviewLikeRepository;
 import youtlifecut.app.repository.ReviewRepository;
 import youtlifecut.app.repository.UserRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -92,6 +97,36 @@ public class ReviewService {
         reviewRepository.deleteById(reviewDeleteDto.getReviewId());
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    /**
+     * placename으로 리뷰 검색
+     */
+    public PlaceSearchDto getReviewByPlaceName(String placeName){
+        Place place = placeRepository.findByName(placeName)
+                .orElseThrow(() -> new IllegalStateException("그런 장소 없음"));
+
+        List<Review> reviews = reviewRepository.findByPlace(place)
+                .orElseThrow(() -> new IllegalStateException("그런 리뷰 없음"));
+
+
+
+        PlaceSearchDto placeSearchDto = PlaceSearchDto.builder()
+                .placename(placeName)
+                .reviews(reviews)
+                .build();
+
+        return placeSearchDto;
+    }
+
+    public ResponseEntity addPlace(ReviewLocationAddDto reviewLocationAddDto){
+
+        Place place = new Place();
+        place.setName(reviewLocationAddDto.getPlaceName());
+
+        placeRepository.save(place);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 
 
 }

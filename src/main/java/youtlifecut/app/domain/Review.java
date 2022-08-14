@@ -45,7 +45,7 @@ public class Review extends BaseTimeEntity{
     //==생성메소드==//
     public void postReview(Place place){
         this.place = place;
-        place.getPlaceReviews().add(this);
+        place.getReviews().add(this);
     }
 
 
