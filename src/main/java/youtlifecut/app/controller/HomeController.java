@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import youtlifecut.app.domain.Banner;
 import youtlifecut.app.domain.Curation;
 import youtlifecut.app.domain.Image;
+import youtlifecut.app.dto.CurationDto;
 import youtlifecut.app.service.HomeService;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class HomeController {
     }
 
     @GetMapping("/curation")
-    public List<Curation> getCuration(){
+    public List<CurationDto> getCuration(){
         return homeService.getCuration();
     }
 

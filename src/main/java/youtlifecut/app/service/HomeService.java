@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import youtlifecut.app.domain.Banner;
 import youtlifecut.app.domain.Curation;
+import youtlifecut.app.dto.CurationDto;
 import youtlifecut.app.repository.BannerRepository;
 import youtlifecut.app.repository.CurationRepository;
 
@@ -21,7 +22,17 @@ public class HomeService {
         return bannerRepository.findAll();
     }
 
-    public List<Curation> getCuration(){
-        return curationRepository.findAll();
+    public List<CurationDto> getCuration(){
+        List<Curation> curations = curationRepository.findAll();
+
+        List<CurationDto> curationDtos = new ArrayList<>();
+
+        for (Curation curation : curations){
+            CurationDto curationDto = new CurationDto(curation);
+            curationDtos.add(curationDto);
+        }
+
+        return curationDtos;
+
     }
 }
