@@ -8,10 +8,14 @@ import java.util.List;
 
 @Data
 public class PlaceSearchDto {
+
+    private Long placeId;
     private String placename;
 
     @Builder
-    public PlaceSearchDto(String placename){
+    public PlaceSearchDto(Long placeId, String placename){
+        this.placeId = placeId;
         this.placename = placename;
+
     }
 }

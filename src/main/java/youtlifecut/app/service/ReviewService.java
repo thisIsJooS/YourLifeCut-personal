@@ -62,6 +62,7 @@ public class ReviewService {
                 .placeId(review.getPlace().getId())
                 .address(review.getPlace().getAddress())
                 .userName(review.getUser().getName())
+                .content(review.getContent())
                 .build();
 
         return reviewDetailDto;
@@ -102,13 +103,13 @@ public class ReviewService {
     /**
      * 리뷰 삭제
      */
-    public ResponseEntity deleteReview(ReviewDeleteDto reviewDeleteDto){
+    public Long deleteReview(ReviewDeleteDto reviewDeleteDto){
         reviewRepository.deleteById(reviewDeleteDto.getReviewId());
-        return new ResponseEntity(HttpStatus.OK);
+        return reviewDeleteDto.getReviewId();
     }
 
     /**
-     * placename으로 리뷰 검색
+     * placename으로 해당 장소가 등록되어있는지 검색
      */
     public PlaceSearchDto getReviewByPlaceName(String placeName){
         Place place = placeRepository.findByName(placeName)
@@ -119,6 +120,7 @@ public class ReviewService {
         }
 
         PlaceSearchDto placeSearchDto = PlaceSearchDto.builder()
+                .placeId(place.getId())
                 .placename(place.getName())
                 .build();
 
