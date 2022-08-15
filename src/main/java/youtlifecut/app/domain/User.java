@@ -28,6 +28,8 @@ public class User extends BaseTimeEntity{
     @ColumnDefault("0")
     private Integer mileage;
 
+    private String email;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -46,9 +48,10 @@ public class User extends BaseTimeEntity{
 
 
     @Builder
-    public User(String name, String picture, Role role){
+    public User(String name, String picture, String email, Role role){
         this.name = name;
         this.picture = picture;
+        this.email = email;
         this.role = role;
     }
 
