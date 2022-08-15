@@ -175,20 +175,5 @@ public class KakaoService {
         }
     }
 
-    public UserDto responseUserInfo(Map<String, Object> userInfo){
-        Long id = (Long) userInfo.get("id");
-        String name = (String) userInfo.get("nickname");
-        String profile_image  = (String) userInfo.get("thumbnail_image");
-        String email = (String) userInfo.get("email");
-
-        UserDto userDto = UserDto.builder()
-                .id(id)
-                .name(name)
-                .profile_image(profile_image)
-                .email(email)
-                .build();
-
-        return userDto;
-    }
 }
 
