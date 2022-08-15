@@ -13,6 +13,11 @@ import java.util.Map;
 @Controller
 public class KakaoController {
 
+    @GetMapping("/login/kakao")
+    public String kakaoLogin(){
+        return "forward:/https://kauth.kakao.com/oauth/authorize?client_id=f59f1da1323e0e466c18bfdf8d2c67b2&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/kakao&response_type=code";
+    }
+
     @Autowired
     KakaoService ks;
 
@@ -26,6 +31,6 @@ public class KakaoController {
         model.addAttribute("userInfo", userInfo);
 
         //ci는 비즈니스 전환후 검수신청 -> 허락받아야 수집 가능
-        return "index";
+        return "kakaoResponse";
     }
 }

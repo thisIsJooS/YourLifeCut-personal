@@ -1,9 +1,15 @@
 package youtlifecut.app.service;
 
-import com.nimbusds.jose.shaded.json.JSONObject;
-import com.nimbusds.jose.shaded.json.parser.JSONParser;
-import com.nimbusds.jose.shaded.json.parser.ParseException;
+
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
+import youtlifecut.app.domain.User;
+import youtlifecut.app.dto.UserDto;
+import youtlifecut.app.repository.UserRepository;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -12,9 +18,13 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class KakaoService {
+
+    private final UserRepository userRepository;
     public String getToken(String code) throws IOException {
         // 인가코드로 토큰받기
         String host = "https://kauth.kakao.com/oauth/token";
@@ -29,7 +39,7 @@ public class KakaoService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=f59f1da1323e0e466c18bfdf8d2c67b2");
-            sb.append("&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/kakao");
+            sb.append("&redirect_uri=http://127.0.0.1:8080/auth/login/kakao/callback");
             sb.append("&code=" + code);
 
             bw.write(sb.toString());
@@ -102,10 +112,12 @@ public class KakaoService {
             JSONObject properties = (JSONObject) obj.get("properties");
             String id = obj.get("id").toString();
             String nickname = properties.get("nickname").toString();
+            String profile_image = properties.get("thumbnail_image").toString();
             String email = kakao_account.get("email").toString();
 
             result.put("id", id);
             result.put("nickname", nickname);
+            result.put("profile_image", profile_image);
             result.put("email", email);
 
             br.close();
@@ -149,6 +161,34 @@ public class KakaoService {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public void kakaoSignup(Map<String, Object> userInfo){
+        Long id = Long.parseLong((String) userInfo.get("id"));
+        String name = (String) userInfo.get("nickname");
+        String profile_image  = (String) userInfo.get("profile_image");
+        String email = (String) userInfo.get("email");
+
+
+        if(userRepository.findById(id).equals(Optional.empty())){
+            userRepository.save(new User(id, name, profile_image, email));
+        }
+    }
+
+    public UserDto responseUserInfo(Map<String, Object> userInfo){
+        Long id = (Long) userInfo.get("id");
+        String name = (String) userInfo.get("nickname");
+        String profile_image  = (String) userInfo.get("thumbnail_image");
+        String email = (String) userInfo.get("email");
+
+        UserDto userDto = UserDto.builder()
+                .id(id)
+                .name(name)
+                .profile_image(profile_image)
+                .email(email)
+                .build();
+
+        return userDto;
     }
 }
 

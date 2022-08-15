@@ -10,7 +10,6 @@
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/auth/login}">로그인</a>
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/auth/logout}">로그아웃</a>
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/auth/userid}">userid 받기</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/user/signup}">회원가입</a>
