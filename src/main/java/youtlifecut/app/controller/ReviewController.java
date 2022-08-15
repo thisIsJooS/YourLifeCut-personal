@@ -39,7 +39,7 @@ public class ReviewController {
      * 리뷰 삭제 요청
      */
     @DeleteMapping("")
-    public ResponseEntity deleteReview(@RequestBody ReviewDeleteDto reviewDeleteDto){
+    public Long deleteReview(@RequestBody ReviewDeleteDto reviewDeleteDto){
         return reviewService.deleteReview(reviewDeleteDto);
     }
 
