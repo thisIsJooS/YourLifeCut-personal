@@ -1,15 +1,25 @@
 package youtlifecut.app.controller;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import youtlifecut.app.domain.User;
+import youtlifecut.app.service.OAuthService;
+
+import java.security.Principal;
 
 @Controller
+@RequiredArgsConstructor
 public class AuthController {
-
+    private final OAuthService oAuthService;
     /**
      * 로그인 페이지 매핑
      * @return
@@ -39,7 +49,19 @@ public class AuthController {
         String currentPrincipalName = authentication.getName();
         System.out.println("currentPrincipalName >>>>> " + currentPrincipalName);
 
-        return "login_form";
+        return "redirect:/login_form";
+    }
+
+    /**
+     * 현재 로그인된 사용자의 아이디 반환하기
+     */
+    @GetMapping("/auth/userid")
+    @ResponseBody
+    @PreAuthorize("isAuthenticated()")
+    public Long getUserId(Principal principal){
+        OAuth2AuthenticationToken oAuth2AuthenticationToken;
+        System.out.println(principal.toString());
+        return 1L;
     }
 
 
