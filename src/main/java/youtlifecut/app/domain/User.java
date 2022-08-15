@@ -20,7 +20,7 @@ public class User extends BaseTimeEntity{
     @Column(name = "user_id")
     private Long id;
 
-    @Column(length = 8, unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     private String picture;
@@ -29,7 +29,6 @@ public class User extends BaseTimeEntity{
     private Integer mileage;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
