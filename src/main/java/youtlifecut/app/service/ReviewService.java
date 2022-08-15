@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import youtlifecut.app.domain.Place;
-import youtlifecut.app.domain.Review;
-import youtlifecut.app.domain.Review_Like;
-import youtlifecut.app.domain.User;
+import youtlifecut.app.domain.*;
 import youtlifecut.app.dto.place.PlaceSearchDto;
 import youtlifecut.app.dto.review.ReviewDeleteDto;
 import youtlifecut.app.dto.review.ReviewDetailDto;
@@ -86,7 +83,17 @@ public class ReviewService {
         review.setContent(reviewPostDto.getContent());
         review.setRate(reviewPostDto.getRate());
         review.setPlace(place);
-        review.setKeywords(reviewPostDto.getKeywords());
+//        review.setKeywords(reviewPostDto.getKeywords());
+
+        ArrayList<String> keywordsStringList = reviewPostDto.getKeywords();
+
+        // 키워드 추가 문제... 뭘까요
+        ArrayList<Keyword> keywordsEntityList = new ArrayList<>();
+        for(String keyword : keywordsStringList){
+            keywordsEntityList.add(new Keyword(keyword));
+        }
+        review.setKeywords(keywordsEntityList);
+        // 키워드 추가 문제
 
         reviewRepository.save(review);
         return new ResponseEntity(HttpStatus.OK);

@@ -4,19 +4,20 @@ import lombok.Builder;
 import lombok.Data;
 import youtlifecut.app.domain.Keyword;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class ReviewPostDto {
     private Long userId;
     private Long placeId;
-    private List<Keyword> keywords;
+    private ArrayList<String> keywords;
     private String content;
     private Integer rate;
     private String image;
 
     @Builder
-    public ReviewPostDto(Long userId, Long placeId, List<Keyword> keywords, String content, Integer rate, String image){
+    public ReviewPostDto(Long userId, Long placeId, ArrayList<String> keywords, String content, Integer rate, String image){
         this.userId = userId;
         this.placeId = placeId;
         this.keywords = keywords;

@@ -11,14 +11,14 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Curation {
     @Id
     @GeneratedValue
     @Column(name = "curation_id")
-    private final Long id;
+    private Long id;
 
-    private final String subtitle;
+    private String subtitle;
 
     @OneToMany(mappedBy = "curation", fetch = FetchType.LAZY)
     private List<Place> places = new ArrayList<>();

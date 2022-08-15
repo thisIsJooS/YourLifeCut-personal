@@ -72,5 +72,9 @@ public class ReviewController {
      * 리뷰 작성 시 키워드 추가
      */
 
+    /**
+     * 이미지 리뷰테이블에 저장
+     */
+
 
 }
