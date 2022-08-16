@@ -84,17 +84,8 @@ public class ReviewService {
         review.setContent(reviewPostDto.getContent());
         review.setRate(reviewPostDto.getRate());
         review.setPlace(place);
-//        review.setKeywords(reviewPostDto.getKeywords());
+        System.out.println("이거 되나요?>>>> " + reviewPostDto.getKeywords());
 
-        ArrayList<String> keywordsStringList = reviewPostDto.getKeywords();
-
-        // 키워드 추가 문제... 뭘까요
-        ArrayList<Keyword> keywordsEntityList = new ArrayList<>();
-        for(String keyword : keywordsStringList){
-            keywordsEntityList.add(new Keyword(keyword));
-        }
-        review.setKeywords(keywordsEntityList);
-        // 키워드 추가 문제
 
         reviewRepository.save(review);
         return new ResponseEntity(HttpStatus.OK);
