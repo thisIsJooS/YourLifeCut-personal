@@ -3,6 +3,7 @@ package youtlifecut.app.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -11,27 +12,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @DynamicInsert
 public class User extends BaseTimeEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    private String picture;
+    private String profile_image;
 
     @ColumnDefault("0")
     private Integer mileage;
 
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
@@ -47,31 +45,19 @@ public class User extends BaseTimeEntity{
     private List<Keyword> keywords = new ArrayList<>();
 
 
-    @Builder
-    public User(String name, String picture, String email, Role role){
+    public User(Long id, String name, String profile_image, String email){
+        this.id = id;
         this.name = name;
-        this.picture = picture;
+        this.profile_image = profile_image;
         this.email = email;
-        this.role = role;
-    }
-
-    public User update(String name, String picture){
-        this.name = name;
-        this.picture = picture;
-
-        return this;
     }
 
     public void setName(String name){
         this.name = name;
     }
 
-    public void setPicture(String picture){
-        this.picture = picture;
+    public void setProfile_image(String profile_image){
+        this.profile_image = profile_image;
     }
 
-
-    public String getRoleKey(){
-        return this.role.getKey();
-    }
 }

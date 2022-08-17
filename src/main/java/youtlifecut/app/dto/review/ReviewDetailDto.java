@@ -3,6 +3,10 @@ package youtlifecut.app.dto.review;
 import lombok.Builder;
 import lombok.Data;
 import youtlifecut.app.domain.Image;
+import youtlifecut.app.domain.Keyword;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ReviewDetailDto {
@@ -15,6 +19,8 @@ public class ReviewDetailDto {
     private Image image;
 
     private String content;
+
+    private List<ReviewKeywordDto> keywords = new ArrayList<>();
 
     @Builder
     public ReviewDetailDto(Long userId, Long placeId , String userName, Long rate,

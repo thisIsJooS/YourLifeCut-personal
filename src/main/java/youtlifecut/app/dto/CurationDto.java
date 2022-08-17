@@ -3,7 +3,6 @@ package youtlifecut.app.dto;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.parameters.P;
 import youtlifecut.app.domain.Curation;
 import youtlifecut.app.domain.Place;
 

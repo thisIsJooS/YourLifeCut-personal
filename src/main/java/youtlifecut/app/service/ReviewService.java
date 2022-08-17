@@ -3,22 +3,17 @@ package youtlifecut.app.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import youtlifecut.app.domain.*;
 import youtlifecut.app.dto.place.PlaceSearchDto;
-import youtlifecut.app.dto.review.ReviewDeleteDto;
-import youtlifecut.app.dto.review.ReviewDetailDto;
-import youtlifecut.app.dto.review.ReviewLocationAddDto;
-import youtlifecut.app.dto.review.ReviewPostDto;
-import youtlifecut.app.repository.PlaceRepository;
-import youtlifecut.app.repository.ReviewLikeRepository;
-import youtlifecut.app.repository.ReviewRepository;
-import youtlifecut.app.repository.UserRepository;
+import youtlifecut.app.dto.review.*;
+import youtlifecut.app.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
 
 @Service
@@ -31,6 +26,8 @@ public class ReviewService {
     private final UserRepository userRepository;
 
     private final PlaceRepository placeRepository;
+
+    private final KeywordRepository keywordRepository;
 
     /**
      * 리뷰 좋아요
@@ -57,13 +54,23 @@ public class ReviewService {
     public ReviewDetailDto getReviewDetail(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalStateException("그런 리뷰 없음"));
+
         ReviewDetailDto reviewDetailDto = ReviewDetailDto.builder()
                 .userId(review.getUser().getId())
                 .placeId(review.getPlace().getId())
                 .address(review.getPlace().getAddress())
                 .userName(review.getUser().getName())
                 .content(review.getContent())
+                .rate(Long.valueOf(review.getRate()))
                 .build();
+
+        for(Keyword keyword : review.getKeywords()){
+            ReviewKeywordDto reviewKeywordDto = ReviewKeywordDto.builder()
+                    .name(keyword.getName())
+                    .build();
+
+            reviewDetailDto.getKeywords().add(reviewKeywordDto);
+        }
 
         return reviewDetailDto;
     }
@@ -84,19 +91,33 @@ public class ReviewService {
         review.setContent(reviewPostDto.getContent());
         review.setRate(reviewPostDto.getRate());
         review.setPlace(place);
-//        review.setKeywords(reviewPostDto.getKeywords());
 
-        ArrayList<String> keywordsStringList = reviewPostDto.getKeywords();
-
-        // 키워드 추가 문제... 뭘까요
-        ArrayList<Keyword> keywordsEntityList = new ArrayList<>();
-        for(String keyword : keywordsStringList){
-            keywordsEntityList.add(new Keyword(keyword));
-        }
-        review.setKeywords(keywordsEntityList);
-        // 키워드 추가 문제
-
+        // review id를 일단 생성
         reviewRepository.save(review);
+
+        // 키워드 설정
+        List<Keyword> keywordList = new ArrayList<Keyword>();
+        for(String keywordString : reviewPostDto.getKeywords()){
+
+            Keyword keyword;
+            if (keywordRepository.findByName(keywordString).equals(Optional.empty())){
+                keyword = new Keyword();
+                keyword.setName(keywordString);
+                keywordRepository.save(keyword);
+            }else{
+                keyword = keywordRepository.findByName(keywordString)
+                        .orElseThrow(() -> new IllegalStateException("그런 키워드 없음"));
+            }
+
+            keywordList.add(keyword);
+        }
+        // 키워드 설정 끝
+
+        Review newReview = reviewRepository.findById(review.getId())
+                .map(entity -> entity.updateKeywordAndAddReviewInKeyword(keywordList))
+                .orElse(review);
+        reviewRepository.save(newReview);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
