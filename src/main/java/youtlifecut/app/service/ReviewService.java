@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import youtlifecut.app.domain.*;
 import youtlifecut.app.dto.place.PlaceSearchDto;
-import youtlifecut.app.dto.review.ReviewDeleteDto;
-import youtlifecut.app.dto.review.ReviewDetailDto;
-import youtlifecut.app.dto.review.ReviewLocationAddDto;
-import youtlifecut.app.dto.review.ReviewPostDto;
+import youtlifecut.app.dto.review.*;
 import youtlifecut.app.repository.*;
 
 import java.util.ArrayList;
@@ -57,13 +54,23 @@ public class ReviewService {
     public ReviewDetailDto getReviewDetail(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalStateException("그런 리뷰 없음"));
+
         ReviewDetailDto reviewDetailDto = ReviewDetailDto.builder()
                 .userId(review.getUser().getId())
                 .placeId(review.getPlace().getId())
                 .address(review.getPlace().getAddress())
                 .userName(review.getUser().getName())
                 .content(review.getContent())
+                .rate(Long.valueOf(review.getRate()))
                 .build();
+
+        for(Keyword keyword : review.getKeywords()){
+            ReviewKeywordDto reviewKeywordDto = ReviewKeywordDto.builder()
+                    .name(keyword.getName())
+                    .build();
+
+            reviewDetailDto.getKeywords().add(reviewKeywordDto);
+        }
 
         return reviewDetailDto;
     }
@@ -89,11 +96,8 @@ public class ReviewService {
         reviewRepository.save(review);
 
         // 키워드 설정
-        System.out.println("이거 되나요?>>>> " + reviewPostDto.getKeywords());
-
         List<Keyword> keywordList = new ArrayList<Keyword>();
         for(String keywordString : reviewPostDto.getKeywords()){
-            System.out.println("이거야 >> " + keywordString);
 
             Keyword keyword;
             if (keywordRepository.findByName(keywordString).equals(Optional.empty())){
@@ -109,7 +113,11 @@ public class ReviewService {
         }
         // 키워드 설정 끝
 
-        review.updateKeywordAndAddReviewInKeyword(keywordList);
+        Review newReview = reviewRepository.findById(review.getId())
+                .map(entity -> entity.updateKeywordAndAddReviewInKeyword(keywordList))
+                .orElse(review);
+        reviewRepository.save(newReview);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
