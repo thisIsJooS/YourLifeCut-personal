@@ -12,13 +12,11 @@ import youtlifecut.app.dto.review.ReviewDeleteDto;
 import youtlifecut.app.dto.review.ReviewDetailDto;
 import youtlifecut.app.dto.review.ReviewLocationAddDto;
 import youtlifecut.app.dto.review.ReviewPostDto;
-import youtlifecut.app.repository.PlaceRepository;
-import youtlifecut.app.repository.ReviewLikeRepository;
-import youtlifecut.app.repository.ReviewRepository;
-import youtlifecut.app.repository.UserRepository;
+import youtlifecut.app.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
 
 @Service
@@ -31,6 +29,8 @@ public class ReviewService {
     private final UserRepository userRepository;
 
     private final PlaceRepository placeRepository;
+
+    private final KeywordRepository keywordRepository;
 
     /**
      * 리뷰 좋아요
@@ -84,10 +84,32 @@ public class ReviewService {
         review.setContent(reviewPostDto.getContent());
         review.setRate(reviewPostDto.getRate());
         review.setPlace(place);
+
+        // review id를 일단 생성
+        reviewRepository.save(review);
+
+        // 키워드 설정
         System.out.println("이거 되나요?>>>> " + reviewPostDto.getKeywords());
 
+        List<Keyword> keywordList = new ArrayList<Keyword>();
+        for(String keywordString : reviewPostDto.getKeywords()){
+            System.out.println("이거야 >> " + keywordString);
 
-        reviewRepository.save(review);
+            Keyword keyword;
+            if (keywordRepository.findByName(keywordString).equals(Optional.empty())){
+                keyword = new Keyword();
+                keyword.setName(keywordString);
+                keywordRepository.save(keyword);
+            }else{
+                keyword = keywordRepository.findByName(keywordString)
+                        .orElseThrow(() -> new IllegalStateException("그런 키워드 없음"));
+            }
+
+            keywordList.add(keyword);
+        }
+        // 키워드 설정 끝
+
+        review.updateKeywordAndAddReviewInKeyword(keywordList);
         return new ResponseEntity(HttpStatus.OK);
     }
 

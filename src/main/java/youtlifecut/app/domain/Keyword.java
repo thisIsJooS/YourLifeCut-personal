@@ -11,14 +11,13 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
 public class Keyword {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "keyword_id")
     private Long id;
 
-    private final String name;
+    private String name;
 
     @ManyToMany
     @JoinTable(name = "Review_Keyword",

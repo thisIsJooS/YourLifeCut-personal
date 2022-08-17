@@ -48,5 +48,11 @@ public class Review extends BaseTimeEntity{
         place.getReviews().add(this);
     }
 
+    public void updateKeywordAndAddReviewInKeyword(List<Keyword> keywords){
+        this.keywords = keywords;
+        for (Keyword keyword : keywords){
+            keyword.getReviews().add(this);
+        }
+    }
 
 }
