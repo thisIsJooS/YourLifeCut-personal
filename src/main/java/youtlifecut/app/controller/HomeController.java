@@ -31,6 +31,11 @@ public class HomeController {
 
     @GetMapping("/search")
     public void h(){}
+    /**
+     * 로그인 페이지 매핑 - 내가 그냥 테스트용 html 넘어가기 용
+     * @return
+     */
+
 
 
 }
