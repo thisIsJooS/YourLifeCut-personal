@@ -19,6 +19,7 @@ import java.util.List;
 public class User extends BaseTimeEntity{
     @Id
     @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -29,6 +30,8 @@ public class User extends BaseTimeEntity{
     private Integer mileage;
 
     private String email;
+
+    private String snsId;
 
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -44,12 +47,16 @@ public class User extends BaseTimeEntity{
     @ManyToMany(mappedBy = "users")
     private List<Keyword> keywords = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
-    public User(Long id, String name, String profile_image, String email){
-        this.id = id;
+    @Builder
+    public User(String snsId, String name, String profile_image, String email, Provider provider){
+        this.snsId = snsId;
         this.name = name;
         this.profile_image = profile_image;
         this.email = email;
+        this.provider = provider;
     }
 
     public void setName(String name){
@@ -58,6 +65,12 @@ public class User extends BaseTimeEntity{
 
     public void setProfile_image(String profile_image){
         this.profile_image = profile_image;
+    }
+
+    public User update(String name, String profile_image){
+        this.name = name;
+        this.profile_image = profile_image;
+        return this;
     }
 
 }

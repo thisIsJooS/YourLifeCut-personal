@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
+import youtlifecut.app.domain.Provider;
 import youtlifecut.app.domain.User;
 import youtlifecut.app.dto.UserDto;
 import youtlifecut.app.repository.UserRepository;
@@ -39,7 +40,7 @@ public class KakaoService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=f59f1da1323e0e466c18bfdf8d2c67b2");
-            sb.append("&redirect_uri=http://127.0.0.1:8080/auth/login/kakao/callback");
+            sb.append("&redirect_uri=http://127.0.0.1:8080/auth/kakao/callback");
             sb.append("&code=" + code);
 
             bw.write(sb.toString());
@@ -164,14 +165,14 @@ public class KakaoService {
     }
 
     public void kakaoSignup(Map<String, Object> userInfo){
-        Long id = Long.parseLong((String) userInfo.get("id"));
+        String snsId = (String) userInfo.get("id");
         String name = (String) userInfo.get("nickname");
         String profile_image  = (String) userInfo.get("profile_image");
         String email = (String) userInfo.get("email");
 
 
-        if(userRepository.findById(id).equals(Optional.empty())){
-            userRepository.save(new User(id, name, profile_image, email));
+        if(userRepository.findBySnsId(snsId).equals(Optional.empty())){
+            userRepository.save(new User(snsId, name, profile_image, email, Provider.KAKAO));
         }
     }
 
